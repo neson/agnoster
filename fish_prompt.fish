@@ -87,11 +87,20 @@ function agnoster::git::is_repo
   command git rev-parse --is-inside-work-tree ^/dev/null >/dev/null
 end
 
-function agnoster::git::color
-  if command git diff --no-ext-diff --quiet --exit-code
-    echo "green"
+function agnoster::git::dirty
+  set git_status (command git status --porcelain --ignore-submodules=dirty 2> /dev/null | tail -n1)
+  if [ $git_status ]
+    echo -n "*"
   else
+    echo -n ""
+  end
+end
+
+function agnoster::git::color
+  if [ (agnoster::git::dirty) ]
     echo "yellow"
+  else
+    echo "green"
   end
 end
 
@@ -181,7 +190,7 @@ function fish_prompt
   set_color normal
   set_color -b normal
 
-  echo -n (set_color black)"$AGNOSTER_PROMPT"
+  echo -n (set_color brblack)"$AGNOSTER_PROMPT"
 
   set_color normal
   set_color -b normal
