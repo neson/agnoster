@@ -1,9 +1,11 @@
 function agnoster::rvm
-  if [ -n $rvm_ruby_string ]
-    set ruby_string (echo $rvm_ruby_string | sed s/ruby-//g)
+  if [ -n $DEFAULT_RVM_VERSION ]
+    if [ -n $rvm_ruby_string ]
+      set ruby_string (echo $rvm_ruby_string | sed s/ruby-//g)
 
-    if [ $ruby_string != $DEFAULT_RVM_VERSION ]
-      echo -n "⬥ $ruby_string "
+      if [ $ruby_string != $DEFAULT_RVM_VERSION ]
+        echo -n "⬥ $ruby_string "
+      end
     end
   end
 end
