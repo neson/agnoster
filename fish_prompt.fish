@@ -7,6 +7,10 @@ end
 agnoster::set_default AGNOSTER_SEGMENT_SEPARATOR '' \u2502
 agnoster::set_default AGNOSTER_SEGMENT_RSEPARATOR '' \u2502
 
+agnoster::set_default AGNOSTER_BEFORE_LINE ""
+agnoster::set_default AGNOSTER_AFTER_LINE ""
+agnoster::set_default AGNOSTER_SHOW_PROMPT 0
+
 agnoster::set_default AGNOSTER_ICON_ERROR \u2717
 agnoster::set_default AGNOSTER_ICON_ROOT \u26a1
 agnoster::set_default AGNOSTER_ICON_BGJOBS \u2699
@@ -103,20 +107,11 @@ function agnoster::git::ahead
       }'
 end
 
-function agnoster::git::stashed
-  command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n "$AGNOSTER_ICON_SCM_STASHED"
-end
-
-function agnoster::git::staged
-  command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n "$AGNOSTER_ICON_SCM_STAGED"
-end
 # }}}
 
 function agnoster::git -d "Display the actual git state"
   agnoster::git::is_repo; or return
 
-  set -l staged  (agnoster::git::staged)
-  set -l stashed (agnoster::git::stashed)
   set -l branch (agnoster::git::branch)
   set -l ahead (agnoster::git::ahead)
 
@@ -128,9 +123,6 @@ end
 
 function agnoster::dir -d 'Print current working directory'
   set -l dir (prompt_pwd)
-  if set -q AGNOSTER_SEGMENT_SEPARATOR[2]
-    set dir (echo "$dir" | sed "s,/,$AGNOSTER_SEGMENT_SEPARATOR[2],g")
-  end
   agnoster::segment blue black "$dir "
 end
 
@@ -143,12 +135,18 @@ end
 function fish_prompt
   set -g __agnoster_last_status $status
 
+  echo -n $AGNOSTER_BEFORE_LINE
+
   agnoster::status
   agnoster::context
   agnoster::dir
   agnoster::git
   agnoster::finish
 
+  echo -n $AGNOSTER_AFTER_LINE
+
   set_color normal
   set_color -b normal
+
+  echo -n $AGNOSTER_PROMPT
 end

@@ -3,6 +3,10 @@ function agnoster -d 'Enable theme'
   set -e AGNOSTER_SEGMENT_SEPARATOR
   set -e AGNOSTER_SEGMENT_RSEPARATOR
 
+  set -e AGNOSTER_BEFORE_LINE
+  set -e AGNOSTER_AFTER_LINE
+  set -e AGNOSTER_PROMPT
+
   set -e AGNOSTER_ICON_ERROR
   set -e AGNOSTER_ICON_ROOT
   set -e AGNOSTER_ICON_BGJOBS
@@ -17,6 +21,10 @@ function agnoster -d 'Enable theme'
     set -U AGNOSTER_SEGMENT_SEPARATOR \ue0b0 ' '\ue0b1' '
     set -U AGNOSTER_SEGMENT_RSEPARATOR \ue0b2 \ue0b3
 
+    set -U AGNOSTER_BEFORE_LINE \n
+    set -U AGNOSTER_AFTER_LINE \n
+    set -U AGNOSTER_PROMPT " > "
+
     set -U AGNOSTER_ICON_ERROR \u2717
     set -U AGNOSTER_ICON_ROOT \u26a1
     set -U AGNOSTER_ICON_BGJOBS \u2699
@@ -28,6 +36,10 @@ function agnoster -d 'Enable theme'
   case '*'
     set -U AGNOSTER_SEGMENT_SEPARATOR '' \u2502
     set -U AGNOSTER_SEGMENT_RSEPARATOR '' ''
+
+    set -U AGNOSTER_BEFORE_LINE ""
+    set -U AGNOSTER_AFTER_LINE ""
+    set -U AGNOSTER_PROMPT ""
 
     set -U AGNOSTER_ICON_ERROR \u2717
     set -U AGNOSTER_ICON_ROOT \u26a1
