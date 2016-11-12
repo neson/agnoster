@@ -153,7 +153,7 @@ function agnoster::datetime
 
     if math "$remaining_space > 22" > /dev/null
       set current_datetime (date "+%Y-%m-%d %T")
-      agnoster::segment black brblack "$current_datetime "
+      agnoster::segment black bryellow "$current_datetime "
     end
   end
 end
