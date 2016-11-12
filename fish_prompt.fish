@@ -35,8 +35,13 @@ function agnoster::segment --desc 'Create prompt segment'
   if [ -n "$content" ]
     set -g __agnoster_background $bg
     set_color -b $bg $fg
-    echo -n " $content "
-    set -g agnoster_prompt_string "$agnoster_prompt_string $content _"
+    if [ $content != " " ]
+      echo -n " $content"
+      set -g agnoster_prompt_string "$agnoster_prompt_string $content$AGNOSTER_SEGMENT_SEPARATOR[1]"
+    else
+      echo -n " "
+      set -g agnoster_prompt_string "$agnoster_prompt_string "
+    end
   end
 end
 
@@ -46,29 +51,6 @@ function agnoster::environment
 end
 
 function agnoster::context
-  if [ (uname) = 'Darwin' ]
-    set user (whoami)
-    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*/MBP/g" | sed "s/MacBook Air[ ]*/MBA/g" | sed "s/ 的 /'s /g" | sed "s/$USER's //g" | sed "s/ /_/g")
-    set context "$user@$host"
-    agnoster::segment black normal "$context"
-  else
-    set user (whoami)
-    set host (hostname)
-    set context "$user@$host"
-    if [ "$user" != "$DEFAULT_USER" ]; or [ -n "$SSH_CLIENT" ]
-      agnoster::segment black normal "$context"
-    end
-  end
-end
-
-# Status:
-# - was there an error
-# - am I root
-# - are there background jobs?
-function agnoster::status
-  if [ "$__agnoster_last_status" -ne 0 ]
-    set icons $icons "$AGNOSTER_ICON_ERROR"
-  end
   if [ (id -u $USER) -eq 0 ]
     set icons $icons "$AGNOSTER_ICON_ROOT"
   end
@@ -76,8 +58,26 @@ function agnoster::status
     set icons $icons "$AGNOSTER_ICON_BGJOBS"
   end
 
+  if [ (uname) = 'Darwin' ]
+    set user (whoami)
+    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*/MBP/g" | sed "s/MacBook Air[ ]*/MBA/g" | sed "s/ 的 /'s /g" | sed "s/$USER's //g" | sed "s/ /_/g")
+    set user_and_host "$user@$host"
+  else
+    set user (whoami)
+    set host (hostname)
+    set user_and_host "$user@$host"
+  end
+
   if set -q icons
-    agnoster::segment black red "$icons"
+    agnoster::segment black normal "$user_and_host $icons"
+  else
+    agnoster::segment black normal "$user_and_host"
+  end
+
+  if [ "$__agnoster_last_status" -ne 0 ]
+    agnoster::segment black red "$AGNOSTER_ICON_ERROR "
+  else
+    agnoster::segment black normal " "
   end
 end
 
@@ -130,7 +130,7 @@ function agnoster::git -d "Display the actual git state"
 
   set -l content "$branch$ahead$staged$stashed"
 
-  agnoster::segment (agnoster::git::color) black "$content"
+  agnoster::segment (agnoster::git::color) black "$content "
 end
 # }}}
 
@@ -144,7 +144,7 @@ end
 
 function agnoster::dir -d 'Print current working directory'
   set -l dir (agnoster::prompt_full_pwd)
-  agnoster::segment blue black "$dir"
+  agnoster::segment blue black "$dir "
 end
 
 function agnoster::datetime
@@ -152,7 +152,8 @@ function agnoster::datetime
     set remaining_space (math $agnoster_screen_width - (string length $agnoster_prompt_string))
 
     if math "$remaining_space > 22" > /dev/null
-      agnoster::segment black brblack (date "+%Y-%m-%d %T")
+      set current_datetime (date "+%Y-%m-%d %T")
+      agnoster::segment black brblack "$current_datetime "
     end
   end
 end
@@ -169,7 +170,6 @@ function fish_prompt
   echo -n $AGNOSTER_BEFORE_LINE
 
   agnoster::environment
-  agnoster::status
   agnoster::context
   agnoster::dir
   agnoster::git
