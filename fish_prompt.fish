@@ -35,16 +35,23 @@ function agnoster::segment --desc 'Create prompt segment'
   if [ -n "$content" ]
     set -g __agnoster_background $bg
     set_color -b $bg $fg
-    echo -n " $content"
+    echo -n " $content "
   end
 end
 
 function agnoster::context
-  set user (whoami)
-  set host (hostname)
-
-  if [ "$user" != "$DEFAULT_USER" ]; or [ -n "$SSH_CLIENT" ]
-    agnoster::segment black normal "$user@$host "
+  if [ (uname) = 'Darwin' ]
+    set user (whoami)
+    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*/MBP/g" | sed "s/MacBook Air[ ]*/MBA/g" | sed "s/ 的 /'s /g" | sed "s/$USER's //g" | sed "s/ /_/g")
+    set context "$user@$host"
+    agnoster::segment black normal "$context"
+  else
+    set user (whoami)
+    set host (hostname)
+    set context "$user@$host"
+    if [ "$user" != "$DEFAULT_USER" ]; or [ -n "$SSH_CLIENT" ]
+      agnoster::segment black normal "$context"
+    end
   end
 end
 
@@ -64,7 +71,7 @@ function agnoster::status
   end
 
   if set -q icons
-    agnoster::segment black red "$icons "
+    agnoster::segment black red "$icons"
   end
 end
 
@@ -117,13 +124,13 @@ function agnoster::git -d "Display the actual git state"
 
   set -l content "$branch$ahead$staged$stashed"
 
-  agnoster::segment (agnoster::git::color) black "$content "
+  agnoster::segment (agnoster::git::color) black "$content"
 end
 # }}}
 
 function agnoster::dir -d 'Print current working directory'
   set -l dir (prompt_pwd)
-  agnoster::segment blue black "$dir "
+  agnoster::segment blue black "$dir"
 end
 
 function agnoster::finish
