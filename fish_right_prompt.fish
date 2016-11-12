@@ -37,9 +37,9 @@ function agnoster::git_diff
 
   echo -n "$files_change"":"
   set_color green
-  printf '%*s\n' $insertions_on_graph "" | tr ' ' "▣"
+  printf '%*s\n' $insertions_on_graph "" | tr ' ' \u25A3
   set_color red
-  printf '%*s\n' $deletions_on_graph "" | tr ' ' "▣"
+  printf '%*s\n' $deletions_on_graph "" | tr ' '\u25A3
   echo -n " "
 end
 
