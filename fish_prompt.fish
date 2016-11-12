@@ -151,8 +151,38 @@ function agnoster::prompt_full_pwd
   end
 end
 
+function agnoster::prompt_pwd
+  set -q argv[1]; and switch $argv[1]
+    case -h --help
+      __fish_print_help prompt_pwd
+      return 0
+  end
+
+  # This allows overriding fish_prompt_pwd_dir_length from the outside (global or universal) without leaking it
+  set -q fish_prompt_pwd_dir_length; or set -l fish_prompt_pwd_dir_length 2
+
+  # Replace $HOME with "~"
+  set realhome ~
+  set -l tmp (string replace -r '^'"$realhome"'($|/)' '~$1' $PWD)
+
+  if [ $fish_prompt_pwd_dir_length -eq 0 ]
+    echo $tmp
+  else
+    # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
+    string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' $tmp
+  end
+end
+
 function agnoster::dir -d 'Print current working directory'
   set -l dir (agnoster::prompt_full_pwd)
+  set remaining_space (math $agnoster_screen_width - (string length $agnoster_prompt_string))
+  set dir_length (string length $dir)
+  set remaining_space (math "$remaining_space - $dir_length")
+
+  if math "$remaining_space < 24" > /dev/null
+    set dir (agnoster::prompt_pwd)
+  end
+
   agnoster::segment blue black "$dir "
 end
 
