@@ -36,7 +36,13 @@ function agnoster::segment --desc 'Create prompt segment'
     set -g __agnoster_background $bg
     set_color -b $bg $fg
     echo -n " $content "
+    set -g agnoster_prompt_string "$agnoster_prompt_string $content _"
   end
+end
+
+function agnoster::environment
+  set -g agnoster_screen_width (tput cols)
+  set -g agnoster_prompt_string ""
 end
 
 function agnoster::context
@@ -128,9 +134,27 @@ function agnoster::git -d "Display the actual git state"
 end
 # }}}
 
+function agnoster::prompt_full_pwd
+  if test "$PWD" != "$HOME"
+    printf "%s" (echo $PWD|sed -e 's|/private||' -e "s|^$HOME|~|")
+  else
+    echo '~'
+  end
+end
+
 function agnoster::dir -d 'Print current working directory'
-  set -l dir (prompt_pwd)
+  set -l dir (agnoster::prompt_full_pwd)
   agnoster::segment blue black "$dir"
+end
+
+function agnoster::datetime
+  if [ $AGNOSTER_AFTER_LINE = \n ]
+    set remaining_space (math $agnoster_screen_width - (string length $agnoster_prompt_string))
+
+    if math "$remaining_space > 22" > /dev/null
+      agnoster::segment black brblack (date "+%Y-%m-%d %T")
+    end
+  end
 end
 
 function agnoster::finish
@@ -144,10 +168,12 @@ function fish_prompt
 
   echo -n $AGNOSTER_BEFORE_LINE
 
+  agnoster::environment
   agnoster::status
   agnoster::context
   agnoster::dir
   agnoster::git
+  agnoster::datetime
   agnoster::finish
 
   echo -n $AGNOSTER_AFTER_LINE
