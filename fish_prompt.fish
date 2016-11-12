@@ -181,5 +181,8 @@ function fish_prompt
   set_color normal
   set_color -b normal
 
-  echo -n $AGNOSTER_PROMPT
+  echo -n (set_color black)"$AGNOSTER_PROMPT"
+
+  set_color normal
+  set_color -b normal
 end

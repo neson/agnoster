@@ -23,7 +23,7 @@ function agnoster -d 'Enable theme'
 
     set -U AGNOSTER_BEFORE_LINE \n
     set -U AGNOSTER_AFTER_LINE \n
-    set -U AGNOSTER_PROMPT " > "
+    set -U AGNOSTER_PROMPT " "\u276F" "
 
     set -U AGNOSTER_ICON_ERROR \u2717
     set -U AGNOSTER_ICON_ROOT \u26a1
