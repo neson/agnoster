@@ -4,7 +4,7 @@ function agnoster::rvm
       set ruby_string (echo $rvm_ruby_string | sed s/ruby-//g)
 
       if [ $ruby_string != $DEFAULT_RVM_VERSION ]
-        echo -n "⬥ $ruby_string "
+        echo -n \u25C7" $ruby_string "
       end
     end
   end
@@ -37,9 +37,9 @@ function agnoster::git_diff
 
   echo -n "$files_change"":"
   set_color green
-  for i in (seq $insertions_on_graph); echo -n \u25A3; end
+  for i in (seq $insertions_on_graph); echo -n \u25A8; end
   set_color red
-  for i in (seq $deletions_on_graph); echo -n \u25A3; end
+  for i in (seq $deletions_on_graph); echo -n \u25A8; end
   echo -n " "
 end
 
