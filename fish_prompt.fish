@@ -11,7 +11,7 @@ agnoster::set_default AGNOSTER_BEFORE_LINE ""
 agnoster::set_default AGNOSTER_AFTER_LINE ""
 agnoster::set_default AGNOSTER_SHOW_PROMPT 0
 
-agnoster::set_default AGNOSTER_ICON_ERROR \u2717
+agnoster::set_default AGNOSTER_ICON_ERROR \u2022
 agnoster::set_default AGNOSTER_ICON_ROOT \u26a1
 agnoster::set_default AGNOSTER_ICON_BGJOBS \u2699
 
