@@ -60,7 +60,7 @@ function agnoster::context
 
   if [ (uname) = 'Darwin' ]
     set user (whoami)
-    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*/MBP/g" | sed "s/MacBook Air[ ]*/MBA/g" | sed "s/ 的 /'s /g" | sed "s/$USER's //g" | sed "s/ /_/g")
+    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*/MBP/g" | sed "s/MacBook Air[ ]*/MBA/g" | sed "s/ 的 /'s /g" | sed "s/的 /'s /g" | sed "s/$USER's //g" | sed "s/"(id -F)"'s //g" | sed "s/ /_/g")
     set user_and_host "$user@$host"
   else
     set user (whoami)
