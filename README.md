@@ -1,4 +1,4 @@
-# Fish Agnoster theme
+# Fish Agnoster Theme
 
 Fancy, colorful theme with support for Powerline fonts.
 
@@ -6,9 +6,11 @@ Fancy, colorful theme with support for Powerline fonts.
 
 You should use [Fisherman](https://github.com/fisherman/fisherman)
 
-    fisher install hauleth/agnoster
+    fisher install zetavg/agnoster
 
-Yeah, really. That's it. Be happy with your fancy new theme.
+Or [Fundle](https://github.com/tuvistavie/fundle)
+
+    fundle plugin 'zetavg/agnoster'
 
 ## Themes
 
@@ -19,6 +21,7 @@ Available themes:
 - `default`
 
   ![default theme](screenshots/default.png)
+
 - `powerline`
 
   ![powerline theme](screenshots/powerline.png)

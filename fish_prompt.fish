@@ -60,7 +60,7 @@ function agnoster::context
 
   if [ (uname) = 'Darwin' ]
     set user (whoami)
-    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*/MBP/g" | sed "s/MacBook Air[ ]*/MBA/g" | sed "s/ 的 /'s /g" | sed "s/的 /'s /g" | sed "s/$USER's //g" | sed "s/"(id -F)"'s //g" | sed "s/ /_/g")
+    set host (scutil --get ComputerName | sed "s/MacBook Pro[ ]*//g" | sed "s/MacBook Air[ ]*//g" | sed "s/MacBook[ ]*//g" | sed "s/ 的 /'s /g" | sed "s/的 /'s /g" | sed "s/$USER's //g" | sed "s/"(id -F)"'s //g" | sed "s/ /_/g")
     set user_and_host "$user@$host"
   else
     set user (whoami)
@@ -69,15 +69,15 @@ function agnoster::context
   end
 
   if set -q icons
-    agnoster::segment black normal "$user_and_host $icons"
+    agnoster::segment white black "$user_and_host $icons"
   else
-    agnoster::segment black normal "$user_and_host"
+    agnoster::segment white black "$user_and_host"
   end
 
   if [ "$__agnoster_last_status" -ne 0 ]
-    agnoster::segment black red "$AGNOSTER_ICON_ERROR "
+    agnoster::segment white red "$AGNOSTER_ICON_ERROR "
   else
-    agnoster::segment black normal " "
+    agnoster::segment white black " "
   end
 end
 
