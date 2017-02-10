@@ -10,6 +10,18 @@ function agnoster::rvm
   end
 end
 
+function agnoster::nvm
+  if [ $DEFAULT_NVM_VERSION ]
+    if [ $NVM_BIN ]
+      set node_string (dirname $NVM_BIN | rev | cut -d '/' -f 1 | rev | sed s/v//g)
+
+      if [ $node_string != $DEFAULT_NVM_VERSION ]
+        echo -n \u2B21" $node_string "
+      end
+    end
+  end
+end
+
 function agnoster::git_diff
   agnoster::git::is_repo; or return
 
@@ -50,6 +62,7 @@ function fish_right_prompt
   if math "$screen_width > 40" > /dev/null
     set_color brblack
     agnoster::rvm
+    agnoster::nvm
   end
 
   if math "$screen_width > 52" > /dev/null
